@@ -1,2 +1,3 @@
 # vavr-hibernate6
-vavr-hibernate6
+
+Vavr Hibernate 6
