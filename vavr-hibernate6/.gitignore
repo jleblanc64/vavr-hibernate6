@@ -1,0 +1,7 @@
+/target/
+/.project
+/.classpath
+/.settings/
+debug.log
+/.idea/
+/hibernate.iml
