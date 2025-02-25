@@ -18,7 +18,7 @@ package io.github.jleblanc64.hibernate6.custom.jackson.deser;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleSerializers;
-import io.github.jleblanc64.libcustom.meta.MetaOption;
+import io.github.jleblanc64.hibernate6.custom.meta.MetaOption;
 import lombok.AllArgsConstructor;
 
 // https://github.com/FasterXML/jackson-modules-java8/blob/2.13/datatypes/src/main/java/com/fasterxml/jackson/datatype/jdk8/Jdk8Module.java

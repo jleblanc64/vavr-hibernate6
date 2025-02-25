@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer;
 import com.fasterxml.jackson.databind.util.Converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
-import io.github.jleblanc64.libcustom.meta.MetaOption;
+import io.github.jleblanc64.hibernate6.custom.meta.MetaOption;
 
 public class OptionSer<T> extends StdDelegatingSerializer {
     public OptionSer(MetaOption<T> metaOption) {

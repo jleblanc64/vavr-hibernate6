@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer;
 import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer;
 import com.fasterxml.jackson.databind.util.Converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
-import io.github.jleblanc64.libcustom.meta.MetaList;
+import io.github.jleblanc64.hibernate6.custom.meta.MetaList;
 
 import java.util.ArrayList;
 import java.util.Collection;

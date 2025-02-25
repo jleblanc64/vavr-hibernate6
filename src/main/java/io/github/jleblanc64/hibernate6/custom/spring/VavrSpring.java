@@ -16,10 +16,10 @@
 package io.github.jleblanc64.hibernate6.custom.spring;
 
 import io.github.jleblanc64.hibernate6.custom.hibernate.Utils;
+import io.github.jleblanc64.hibernate6.custom.hibernate.duplicate.ParameterizedTypeImpl;
+import io.github.jleblanc64.hibernate6.custom.meta.MetaList;
+import io.github.jleblanc64.hibernate6.custom.meta.MetaOption;
 import io.github.jleblanc64.libcustom.LibCustom;
-import io.github.jleblanc64.libcustom.custom.hibernate.duplicate.ParameterizedTypeImpl;
-import io.github.jleblanc64.libcustom.meta.MetaList;
-import io.github.jleblanc64.libcustom.meta.MetaOption;
 import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.convert.TypeDescriptor;
