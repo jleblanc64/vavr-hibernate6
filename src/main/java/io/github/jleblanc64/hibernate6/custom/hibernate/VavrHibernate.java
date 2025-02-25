@@ -15,9 +15,9 @@
  */
 package io.github.jleblanc64.hibernate6.custom.hibernate;
 
+import io.github.jleblanc64.hibernate6.custom.hibernate.duplicate.FieldCustomType;
+import io.github.jleblanc64.hibernate6.custom.hibernate.duplicate.TypeImpl;
 import io.github.jleblanc64.libcustom.LibCustom;
-import io.github.jleblanc64.libcustom.custom.utils.FieldCustomType;
-import io.github.jleblanc64.libcustom.custom.utils.TypeImpl;
 import io.github.jleblanc64.libcustom.meta.MetaList;
 import io.github.jleblanc64.libcustom.meta.MetaOption;
 import lombok.SneakyThrows;
