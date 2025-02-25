@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.hibernate.duplicate;
+package io.github.jleblanc64.hibernate6.hibernate.duplicate;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;

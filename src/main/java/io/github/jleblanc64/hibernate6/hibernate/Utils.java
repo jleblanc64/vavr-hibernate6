@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.hibernate;
+package io.github.jleblanc64.hibernate6.hibernate;
 
-import io.github.jleblanc64.hibernate6.custom.meta.WithClass;
+import io.github.jleblanc64.hibernate6.meta.WithClass;
 import io.github.jleblanc64.libcustom.functional.ListF;
 import jakarta.persistence.Entity;
 import lombok.SneakyThrows;

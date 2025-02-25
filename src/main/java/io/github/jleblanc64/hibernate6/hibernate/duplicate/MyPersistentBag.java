@@ -13,26 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.hibernate.duplicate;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
+package io.github.jleblanc64.hibernate6.hibernate.duplicate;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Incubating;
 import org.hibernate.collection.spi.AbstractPersistentCollection;
 import org.hibernate.collection.spi.CollectionSemantics;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.metamodel.mapping.PluralAttributeMapping;
 import org.hibernate.persister.collection.CollectionPersister;
 import org.hibernate.type.Type;
+
+import java.io.Serializable;
+import java.util.*;
 
 public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
 
@@ -56,26 +48,25 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
      * @param session The session
      */
     public MyPersistentBag(SharedSessionContractImplementor session) {
-        super( session );
+        super(session);
     }
 
     /**
      * Constructs a PersistentBag
      *
      * @param session The session
-     * @param coll The base elements.
+     * @param coll    The base elements.
      */
     public MyPersistentBag(SharedSessionContractImplementor session, Collection<E> coll) {
-        super( session );
+        super(session);
         providedCollection = coll;
-        if ( coll instanceof List ) {
+        if (coll instanceof List) {
             bag = (List<E>) coll;
-        }
-        else {
-            bag = new ArrayList<>( coll );
+        } else {
+            bag = new ArrayList<>(coll);
         }
         setInitialized();
-        setDirectlyAccessible( true );
+        setDirectlyAccessible(true);
     }
 
     @Override
@@ -102,15 +93,15 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
         assert bag == null;
 
         final CollectionPersister collectionDescriptor = attributeMapping.getCollectionDescriptor();
-        final CollectionSemantics<?,?> collectionSemantics = collectionDescriptor.getCollectionSemantics();
+        final CollectionSemantics<?, ?> collectionSemantics = collectionDescriptor.getCollectionSemantics();
 
         final int elementCount = loadingState == null ? 0 : loadingState.size();
 
-        this.bag = (List<E>) collectionSemantics.instantiateRaw( elementCount, collectionDescriptor );
+        this.bag = (List<E>) collectionSemantics.instantiateRaw(elementCount, collectionDescriptor);
 
-        if ( loadingState != null ) {
-            for ( int i = 0; i < elementCount; i++ ) {
-                bag.add( (E) loadingState.get( i ) );
+        if (loadingState != null) {
+            for (int i = 0; i < elementCount; i++) {
+                bag.add((E) loadingState.get(i));
             }
         }
     }
@@ -119,24 +110,24 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
     public boolean equalsSnapshot(CollectionPersister persister) throws HibernateException {
         final Type elementType = persister.getElementType();
         final List<?> sn = (List<?>) getSnapshot();
-        if ( sn.size() != bag.size() ) {
+        if (sn.size() != bag.size()) {
             return false;
         }
 
         // HHH-11032 - Group objects by Type.getHashCode() to reduce the complexity of the search
-        final Map<Integer, List<Object>> hashToInstancesBag = groupByEqualityHash( bag, elementType );
-        final Map<Integer, List<Object>> hashToInstancesSn = groupByEqualityHash( sn, elementType );
-        if ( hashToInstancesBag.size() != hashToInstancesSn.size() ) {
+        final Map<Integer, List<Object>> hashToInstancesBag = groupByEqualityHash(bag, elementType);
+        final Map<Integer, List<Object>> hashToInstancesSn = groupByEqualityHash(sn, elementType);
+        if (hashToInstancesBag.size() != hashToInstancesSn.size()) {
             return false;
         }
 
         // First iterate over the hashToInstancesBag entries to see if the number
         // of List values is different for any hash value.
-        for ( Map.Entry<Integer, List<Object>> hashToInstancesBagEntry : hashToInstancesBag.entrySet() ) {
+        for (Map.Entry<Integer, List<Object>> hashToInstancesBagEntry : hashToInstancesBag.entrySet()) {
             final Integer hash = hashToInstancesBagEntry.getKey();
             final List<Object> instancesBag = hashToInstancesBagEntry.getValue();
-            final List<Object> instancesSn = hashToInstancesSn.get( hash );
-            if ( instancesSn == null || ( instancesBag.size() != instancesSn.size() ) ) {
+            final List<Object> instancesSn = hashToInstancesSn.get(hash);
+            if (instancesSn == null || (instancesBag.size() != instancesSn.size())) {
                 return false;
             }
         }
@@ -146,17 +137,17 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
         // 2) the same number of values with the same hash value.
 
         // Now check if the number of occurrences of each element is the same.
-        for ( Map.Entry<Integer, List<Object>> hashToInstancesBagEntry : hashToInstancesBag.entrySet() ) {
+        for (Map.Entry<Integer, List<Object>> hashToInstancesBagEntry : hashToInstancesBag.entrySet()) {
             final Integer hash = hashToInstancesBagEntry.getKey();
             final List<Object> instancesBag = hashToInstancesBagEntry.getValue();
-            final List<Object> instancesSn = hashToInstancesSn.get( hash );
-            for ( Object instance : instancesBag ) {
-                if ( !expectOccurrences(
+            final List<Object> instancesSn = hashToInstancesSn.get(hash);
+            for (Object instance : instancesBag) {
+                if (!expectOccurrences(
                         instance,
                         instancesBag,
                         elementType,
-                        countOccurrences( instance, instancesSn, elementType )
-                ) ) {
+                        countOccurrences(instance, instancesSn, elementType)
+                )) {
                     return false;
                 }
             }
@@ -170,12 +161,12 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
      * @return Map of "equality" hashCode to List of objects
      */
     private Map<Integer, List<Object>> groupByEqualityHash(List<?> searchedBag, Type elementType) {
-        if ( searchedBag.isEmpty() ) {
+        if (searchedBag.isEmpty()) {
             return Collections.emptyMap();
         }
         Map<Integer, List<Object>> map = new HashMap<>();
-        for ( Object o : searchedBag ) {
-            map.computeIfAbsent( nullableHashCode( o, elementType ), k -> new ArrayList<>() ).add( o );
+        for (Object o : searchedBag) {
+            map.computeIfAbsent(nullableHashCode(o, elementType), k -> new ArrayList<>()).add(o);
         }
         return map;
     }
@@ -184,23 +175,22 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
      * @return the default elementType hashcode of the object o, or null if the object is null
      */
     private Integer nullableHashCode(Object o, Type elementType) {
-        if ( o == null ) {
+        if (o == null) {
             return null;
-        }
-        else {
-            return elementType.getHashCode( o );
+        } else {
+            return elementType.getHashCode(o);
         }
     }
 
     @Override
     public boolean isSnapshotEmpty(Serializable snapshot) {
-        return ( (Collection<?>) snapshot ).isEmpty();
+        return ((Collection<?>) snapshot).isEmpty();
     }
 
     private int countOccurrences(Object element, List<Object> list, Type elementType) {
         int result = 0;
-        for ( Object listElement : list ) {
-            if ( elementType.isSame( element, listElement ) ) {
+        for (Object listElement : list) {
+            if (elementType.isSame(element, listElement)) {
                 result++;
             }
         }
@@ -209,9 +199,9 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
 
     private boolean expectOccurrences(Object element, List<Object> list, Type elementType, int expected) {
         int result = 0;
-        for ( Object listElement : list ) {
-            if ( elementType.isSame( element, listElement ) ) {
-                if ( result++ > expected ) {
+        for (Object listElement : list) {
+            if (elementType.isSame(element, listElement)) {
+                if (result++ > expected) {
                     return false;
                 }
             }
@@ -222,9 +212,9 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
     @Override
     public Serializable getSnapshot(CollectionPersister persister)
             throws HibernateException {
-        final ArrayList<E> clonedList = new ArrayList<>( bag.size() );
-        for ( E item : bag ) {
-            clonedList.add( (E) persister.getElementType().deepCopy( item, persister.getFactory() ) );
+        final ArrayList<E> clonedList = new ArrayList<>(bag.size());
+        for (E item : bag) {
+            clonedList.add((E) persister.getElementType().deepCopy(item, persister.getFactory()));
         }
         return clonedList;
     }
@@ -232,14 +222,14 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
     @Override
     public Collection<E> getOrphans(Serializable snapshot, String entityName) throws HibernateException {
         final List<E> sn = (List<E>) snapshot;
-        return getOrphans( sn, bag, entityName, getSession() );
+        return getOrphans(sn, bag, entityName, getSession());
     }
 
     @Override
     public void initializeEmptyCollection(CollectionPersister persister) {
         assert bag == null;
         //noinspection unchecked
-        bag = (List<E>) persister.getCollectionSemantics().instantiateRaw( 0, persister );
+        bag = (List<E>) persister.getCollectionSemantics().instantiateRaw(0, persister);
         endRead();
     }
 
@@ -247,8 +237,8 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
     public Object disassemble(CollectionPersister persister) {
         final int length = bag.size();
         final Serializable[] result = new Serializable[length];
-        for ( int i = 0; i < length; i++ ) {
-            result[i] = persister.getElementType().disassemble( bag.get( i ), getSession(), null );
+        for (int i = 0; i < length; i++) {
+            result[i] = persister.getElementType().disassemble(bag.get(i), getSession(), null);
         }
         return result;
     }
@@ -261,12 +251,12 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
         final Serializable[] array = (Serializable[]) disassembled;
         final int size = array.length;
 
-        this.bag = (List<E>) collectionDescriptor.getCollectionSemantics().instantiateRaw( size, collectionDescriptor );
+        this.bag = (List<E>) collectionDescriptor.getCollectionSemantics().instantiateRaw(size, collectionDescriptor);
 
-        for ( Serializable item : array ) {
-            final Object element = collectionDescriptor.getElementType().assemble( item, getSession(), owner );
-            if ( element != null ) {
-                bag.add( (E) element );
+        for (Serializable item : array) {
+            final Object element = collectionDescriptor.getElementType().assemble(item, getSession(), owner);
+            if (element != null) {
+                bag.add((E) element);
             }
         }
     }
@@ -291,26 +281,25 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
         final List<?> sn = (List<?>) getSnapshot();
         final Iterator<?> olditer = sn.iterator();
         int i = 0;
-        while ( olditer.hasNext() ) {
+        while (olditer.hasNext()) {
             final Object old = olditer.next();
             final Iterator<E> newiter = bag.iterator();
             boolean found = false;
-            if ( bag.size() > i && elementType.isSame( old, bag.get( i++ ) ) ) {
+            if (bag.size() > i && elementType.isSame(old, bag.get(i++))) {
                 //a shortcut if its location didn't change!
                 found = true;
-            }
-            else {
+            } else {
                 //search for it
                 //note that this code is incorrect for other than one-to-many
-                while ( newiter.hasNext() ) {
-                    if ( elementType.isSame( old, newiter.next() ) ) {
+                while (newiter.hasNext()) {
+                    if (elementType.isSame(old, newiter.next())) {
                         found = true;
                         break;
                     }
                 }
             }
-            if ( !found ) {
-                deletes.add( old );
+            if (!found) {
+                deletes.add(old);
             }
         }
         return deletes.iterator();
@@ -319,15 +308,14 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
     @Override
     public boolean needsInserting(Object entry, int i, Type elemType) throws HibernateException {
         final List<?> sn = (List<?>) getSnapshot();
-        if ( sn.size() > i && elemType.isSame( sn.get( i ), entry ) ) {
+        if (sn.size() > i && elemType.isSame(sn.get(i), entry)) {
             //a shortcut if its location didn't change!
             return false;
-        }
-        else {
+        } else {
             //search for it
             //note that this code is incorrect for other than one-to-many
-            for ( Object old : sn ) {
-                if ( elemType.isSame( old, entry ) ) {
+            for (Object old : sn) {
+                if (elemType.isSame(old, entry)) {
                     return false;
                 }
             }
@@ -354,13 +342,13 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
     }
 
     public boolean contains(Object object) {
-        final Boolean exists = readElementExistence( object );
-        return exists == null ? bag.contains( object ) : exists;
+        final Boolean exists = readElementExistence(object);
+        return exists == null ? bag.contains(object) : exists;
     }
 
     public Iterator<E> iteratorPriv() {
         read();
-        return new IteratorProxy<>( bag.iterator() );
+        return new IteratorProxy<>(bag.iterator());
     }
 
     public Object[] toArrayPriv() {
@@ -370,88 +358,81 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
 
     public <A> A[] toArray(A[] a) {
         read();
-        return bag.toArray( a );
+        return bag.toArray(a);
     }
 
     public boolean add(E object) {
-        if ( !isOperationQueueEnabled() ) {
+        if (!isOperationQueueEnabled()) {
             write();
-            return bag.add( object );
-        }
-        else {
-            queueOperation( new SimpleAdd( object ) );
+            return bag.add(object);
+        } else {
+            queueOperation(new SimpleAdd(object));
             return true;
         }
     }
 
     public boolean removePriv(Object o) {
-        initialize( true );
-        if ( bag.remove( o ) ) {
+        initialize(true);
+        if (bag.remove(o)) {
             elementRemoved = true;
             dirty();
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public boolean containsAll(Collection<?> c) {
         read();
-        return bag.containsAll( c );
+        return bag.containsAll(c);
     }
 
     public boolean addAll(Collection<? extends E> values) {
-        if ( values.size() == 0 ) {
+        if (values.size() == 0) {
             return false;
         }
-        if ( !isOperationQueueEnabled() ) {
+        if (!isOperationQueueEnabled()) {
             write();
-            return bag.addAll( values );
-        }
-        else {
-            for ( E value : values ) {
-                queueOperation( new SimpleAdd( value ) );
+            return bag.addAll(values);
+        } else {
+            for (E value : values) {
+                queueOperation(new SimpleAdd(value));
             }
             return values.size() > 0;
         }
     }
 
     public boolean removeAll(Collection<?> c) {
-        if ( c.size() > 0 ) {
-            initialize( true );
-            if ( bag.removeAll( c ) ) {
+        if (c.size() > 0) {
+            initialize(true);
+            if (bag.removeAll(c)) {
                 elementRemoved = true;
                 dirty();
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public boolean retainAll(Collection<?> c) {
-        initialize( true );
-        if ( bag.retainAll( c ) ) {
+        initialize(true);
+        if (bag.retainAll(c)) {
             dirty();
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     public void clear() {
-        if ( isClearQueueEnabled() ) {
-            queueOperation( new Clear() );
-        }
-        else {
-            initialize( true );
-            if ( !bag.isEmpty() ) {
+        if (isClearQueueEnabled()) {
+            queueOperation(new Clear());
+        } else {
+            initialize(true);
+            if (!bag.isEmpty()) {
                 bag.clear();
                 dirty();
             }
@@ -460,7 +441,7 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
 
     @Override
     public Object getIndex(Object entry, int i, CollectionPersister persister) {
-        throw new UnsupportedOperationException( "Bags don't have indexes : " + persister.getRole() );
+        throw new UnsupportedOperationException("Bags don't have indexes : " + persister.getRole());
     }
 
     @Override
@@ -471,14 +452,13 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
     @Override
     public Object getSnapshotElement(Object entry, int i) {
         final List<?> sn = (List<?>) getSnapshot();
-        return sn.get( i );
+        return sn.get(i);
     }
 
     /**
      * Count how many times the given object occurs in the elements
      *
      * @param o The object to check
-     *
      * @return The number of occurrences.
      */
     @SuppressWarnings("UnusedDeclaration")
@@ -486,8 +466,8 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
         read();
         final Iterator<E> itr = bag.iterator();
         int result = 0;
-        while ( itr.hasNext() ) {
-            if ( o.equals( itr.next() ) ) {
+        while (itr.hasNext()) {
+            if (o.equals(itr.next())) {
                 result++;
             }
         }
@@ -498,57 +478,56 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
 
     public void add(int i, E o) {
         write();
-        bag.add( i, o );
+        bag.add(i, o);
     }
 
     public boolean addAll(int i, Collection<? extends E> c) {
-        if ( c.size() > 0 ) {
+        if (c.size() > 0) {
             write();
-            return bag.addAll( i, c );
-        }
-        else {
+            return bag.addAll(i, c);
+        } else {
             return false;
         }
     }
 
     public E get(int i) {
         read();
-        return bag.get( i );
+        return bag.get(i);
     }
 
     public int indexOf(Object o) {
         read();
-        return bag.indexOf( o );
+        return bag.indexOf(o);
     }
 
     public int lastIndexOf(Object o) {
         read();
-        return bag.lastIndexOf( o );
+        return bag.lastIndexOf(o);
     }
 
     public ListIterator<E> listIterator() {
         read();
-        return new ListIteratorProxy( bag.listIterator() );
+        return new ListIteratorProxy(bag.listIterator());
     }
 
     public ListIterator<E> listIterator(int i) {
         read();
-        return new ListIteratorProxy( bag.listIterator( i ) );
+        return new ListIteratorProxy(bag.listIterator(i));
     }
 
     public E remove(int i) {
         write();
-        return bag.remove( i );
+        return bag.remove(i);
     }
 
     public E set(int i, E o) {
         write();
-        return bag.set( i, o );
+        return bag.set(i, o);
     }
 
     public List<E> subList(int start, int end) {
         read();
-        return new ListProxy( bag.subList( start, end ) );
+        return new ListProxy(bag.subList(start, end));
     }
 
     @Override
@@ -572,7 +551,7 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
      */
     @Override
     public boolean equals(Object obj) {
-        return super.equals( obj );
+        return super.equals(obj);
     }
 
     @Override
@@ -593,14 +572,14 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
 
         @Override
         public E getOrphan() {
-            throw new UnsupportedOperationException( "queued clear cannot be used with orphan delete" );
+            throw new UnsupportedOperationException("queued clear cannot be used with orphan delete");
         }
     }
 
     final class SimpleAdd extends AbstractValueDelayedOperation {
 
         public SimpleAdd(E addedValue) {
-            super( addedValue, null );
+            super(addedValue, null);
         }
 
         @Override
@@ -611,8 +590,8 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
             // it can happen that an element is already associated with the collection after cascading,
             // but the queued operations are still executed after the lazy initialization of the collection.
             // To avoid duplicates, we have to check if the bag already contains this element
-            if ( !bag.contains( getAddedInstance() ) ) {
-                bag.add( getAddedInstance() );
+            if (!bag.contains(getAddedInstance())) {
+                bag.add(getAddedInstance());
             }
         }
     }
@@ -620,12 +599,12 @@ public class MyPersistentBag<E> extends AbstractPersistentCollection<E> {
     final class SimpleRemove extends AbstractValueDelayedOperation {
 
         public SimpleRemove(E orphan) {
-            super( null, orphan );
+            super(null, orphan);
         }
 
         @Override
         public void operate() {
-            bag.remove( getOrphan() );
+            bag.remove(getOrphan());
         }
     }
 }

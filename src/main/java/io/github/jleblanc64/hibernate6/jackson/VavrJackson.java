@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.jackson;
+package io.github.jleblanc64.hibernate6.jackson;
 
-import io.github.jleblanc64.hibernate6.custom.meta.MetaList;
-import io.github.jleblanc64.hibernate6.custom.meta.MetaOption;
+import io.github.jleblanc64.hibernate6.meta.MetaList;
+import io.github.jleblanc64.hibernate6.meta.MetaOption;
 import io.github.jleblanc64.libcustom.LibCustom;
 import org.springframework.http.converter.json.AbstractJackson2HttpMessageConverter;
 

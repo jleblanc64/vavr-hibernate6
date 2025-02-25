@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.hibernate;
+package io.github.jleblanc64.hibernate6.hibernate;
 
-import io.github.jleblanc64.hibernate6.custom.hibernate.duplicate.FieldCustomType;
-import io.github.jleblanc64.hibernate6.custom.hibernate.duplicate.TypeImpl;
-import io.github.jleblanc64.hibernate6.custom.meta.MetaList;
-import io.github.jleblanc64.hibernate6.custom.meta.MetaOption;
+import io.github.jleblanc64.hibernate6.hibernate.duplicate.FieldCustomType;
+import io.github.jleblanc64.hibernate6.hibernate.duplicate.TypeImpl;
+import io.github.jleblanc64.hibernate6.meta.MetaList;
+import io.github.jleblanc64.hibernate6.meta.MetaOption;
 import io.github.jleblanc64.libcustom.LibCustom;
 import lombok.SneakyThrows;
 import org.hibernate.annotations.common.reflection.XClass;
@@ -36,11 +36,11 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
 
-import static io.github.jleblanc64.hibernate6.custom.hibernate.Utils.checkPersistentBag;
-import static io.github.jleblanc64.hibernate6.custom.hibernate.Utils.isOfType;
+import static io.github.jleblanc64.hibernate6.hibernate.Utils.checkPersistentBag;
+import static io.github.jleblanc64.hibernate6.hibernate.Utils.isOfType;
 import static org.mockito.Mockito.mock;
 
-public class VavrHibernate {
+public class VavrHibernate6 {
     @SneakyThrows
     public static void override(MetaList metaList) {
 

@@ -13,14 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.jackson.deser;
+package io.github.jleblanc64.hibernate6.jackson.deser;
 
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.deser.std.StdDelegatingDeserializer;
 import com.fasterxml.jackson.databind.ser.std.StdDelegatingSerializer;
 import com.fasterxml.jackson.databind.util.Converter;
 import com.fasterxml.jackson.databind.util.StdConverter;
-import io.github.jleblanc64.hibernate6.custom.meta.MetaList;
+import io.github.jleblanc64.hibernate6.meta.MetaList;
 
 import java.util.ArrayList;
 import java.util.Collection;

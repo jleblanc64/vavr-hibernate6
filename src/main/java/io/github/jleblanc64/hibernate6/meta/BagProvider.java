@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.meta;
+package io.github.jleblanc64.hibernate6.meta;
 
-public interface WithClass<T> {
-    Class<T> monadClass();
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 
-    default boolean isSuperClassOf(Object o) {
-        if (o == null)
-            return false;
+import java.util.Collection;
 
-        var clazz = o instanceof Class ? ((Class) o) : o.getClass();
-        return monadClass().isAssignableFrom(clazz);
-    }
+public interface BagProvider<Bag> {
+    Bag of(SharedSessionContractImplementor session);
+
+    Bag of(SharedSessionContractImplementor session, Collection<?> collection);
 }

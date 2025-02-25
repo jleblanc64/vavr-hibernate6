@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.jackson.deser;
+package io.github.jleblanc64.hibernate6.jackson.deser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import io.github.jleblanc64.hibernate6.custom.hibernate.Utils;
-import io.github.jleblanc64.hibernate6.custom.meta.MetaList;
-import io.github.jleblanc64.hibernate6.custom.meta.MetaOption;
+import io.github.jleblanc64.hibernate6.hibernate.Utils;
+import io.github.jleblanc64.hibernate6.meta.MetaList;
+import io.github.jleblanc64.hibernate6.meta.MetaOption;
 import lombok.SneakyThrows;
 import org.springframework.http.converter.HttpMessageConverter;
 

@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.spring;
+package io.github.jleblanc64.hibernate6.spring;
 
-import io.github.jleblanc64.hibernate6.custom.hibernate.Utils;
-import io.github.jleblanc64.hibernate6.custom.hibernate.duplicate.ParameterizedTypeImpl;
-import io.github.jleblanc64.hibernate6.custom.meta.MetaList;
-import io.github.jleblanc64.hibernate6.custom.meta.MetaOption;
+import io.github.jleblanc64.hibernate6.hibernate.Utils;
+import io.github.jleblanc64.hibernate6.hibernate.duplicate.ParameterizedTypeImpl;
+import io.github.jleblanc64.hibernate6.meta.MetaList;
+import io.github.jleblanc64.hibernate6.meta.MetaOption;
 import io.github.jleblanc64.libcustom.LibCustom;
 import lombok.SneakyThrows;
 import org.springframework.core.MethodParameter;

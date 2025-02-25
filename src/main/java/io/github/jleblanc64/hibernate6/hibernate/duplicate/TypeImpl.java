@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6.custom.hibernate.duplicate;
+package io.github.jleblanc64.hibernate6.hibernate.duplicate;
 
 
 import java.lang.reflect.MalformedParameterizedTypeException;
@@ -21,21 +21,23 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
-import java.util.StringJoiner;
 import java.util.Objects;
+import java.util.StringJoiner;
 
-/** Implementing class for ParameterizedType interface. */
+/**
+ * Implementing class for ParameterizedType interface.
+ */
 
 public class TypeImpl implements ParameterizedType {
     private final Type[] actualTypeArguments;
-    private final Class<?>  rawType;
-    private final Type   ownerType;
+    private final Class<?> rawType;
+    private final Type ownerType;
 
     public TypeImpl(Class<?> rawType,
-                     Type[] actualTypeArguments,
-                     Type ownerType) {
+                    Type[] actualTypeArguments,
+                    Type ownerType) {
         this.actualTypeArguments = actualTypeArguments;
-        this.rawType             = rawType;
+        this.rawType = rawType;
         this.ownerType = ownerType;
         validateConstructorArguments();
     }
@@ -47,7 +49,7 @@ public class TypeImpl implements ParameterizedType {
             throw new MalformedParameterizedTypeException(String.format("Mismatch of count of " +
                             "formal and actual type " +
                             "arguments in constructor " +
-                            "of %s: %d formal argument(s) "+
+                            "of %s: %d formal argument(s) " +
                             "%d actual argument(s)",
                     rawType.getName(),
                     formals.length,
@@ -73,14 +75,15 @@ public class TypeImpl implements ParameterizedType {
      * formal type arguments.
      * If any of the actual type arguments is not an instance of the
      * bounds on the corresponding formal.
-     * @param rawType the Class representing the generic type declaration being
-     * instantiated
+     *
+     * @param rawType             the Class representing the generic type declaration being
+     *                            instantiated
      * @param actualTypeArguments a (possibly empty) array of types
-     * representing the actual type arguments to the parameterized type
-     * @param ownerType the enclosing type, if known.
+     *                            representing the actual type arguments to the parameterized type
+     * @param ownerType           the enclosing type, if known.
      * @return An instance of {@code ParameterizedType}
      * @throws MalformedParameterizedTypeException if the instantiation
-     * is invalid
+     *                                             is invalid
      */
     public static TypeImpl make(Class<?> rawType,
                                 Type[] actualTypeArguments,
@@ -99,12 +102,12 @@ public class TypeImpl implements ParameterizedType {
      * a parameterized type.
      *
      * @return an array of {@code Type} objects representing the actual type
-     *     arguments to this type
-     * @throws TypeNotPresentException if any of the
-     *     actual type arguments refers to a non-existent type declaration
+     * arguments to this type
+     * @throws TypeNotPresentException             if any of the
+     *                                             actual type arguments refers to a non-existent type declaration
      * @throws MalformedParameterizedTypeException if any of the
-     *     actual type parameters refer to a parameterized type that cannot
-     *     be instantiated for any reason
+     *                                             actual type parameters refer to a parameterized type that cannot
+     *                                             be instantiated for any reason
      * @since 1.5
      */
     public Type[] getActualTypeArguments() {
@@ -116,7 +119,7 @@ public class TypeImpl implements ParameterizedType {
      * that declared this type.
      *
      * @return the {@code Type} object representing the class or interface
-     *     that declared this type
+     * that declared this type
      */
     public Class<?> getRawType() {
         return rawType;
@@ -131,14 +134,13 @@ public class TypeImpl implements ParameterizedType {
      * <p>If this type is a top-level type, {@code null} is returned.
      *
      * @return a {@code Type} object representing the type that
-     *     this type is a member of. If this type is a top-level type,
-     *     {@code null} is returned
-     * @throws TypeNotPresentException if the owner type
-     *     refers to a non-existent type declaration
+     * this type is a member of. If this type is a top-level type,
+     * {@code null} is returned
+     * @throws TypeNotPresentException             if the owner type
+     *                                             refers to a non-existent type declaration
      * @throws MalformedParameterizedTypeException if the owner type
-     *     refers to a parameterized type that cannot be instantiated
-     *     for any reason
-     *
+     *                                             refers to a parameterized type that cannot be instantiated
+     *                                             for any reason
      */
     public Type getOwnerType() {
         return ownerType;
@@ -160,7 +162,7 @@ public class TypeImpl implements ParameterizedType {
             if (this == that)
                 return true;
 
-            Type thatOwner   = that.getOwnerType();
+            Type thatOwner = that.getOwnerType();
             Type thatRawType = that.getRawType();
 
             if (false) { // Debugging
@@ -210,7 +212,7 @@ public class TypeImpl implements ParameterizedType {
             if (ownerType instanceof TypeImpl) {
                 // Find simple name of nested type by removing the
                 // shared prefix with owner.
-                sb.append(rawType.getName().replace( ((TypeImpl)ownerType).rawType.getName() + "$",
+                sb.append(rawType.getName().replace(((TypeImpl) ownerType).rawType.getName() + "$",
                         ""));
             } else
                 sb.append(rawType.getSimpleName());
@@ -220,7 +222,7 @@ public class TypeImpl implements ParameterizedType {
         if (actualTypeArguments != null) {
             StringJoiner sj = new StringJoiner(", ", "<", ">");
             sj.setEmptyValue("");
-            for(Type t: actualTypeArguments) {
+            for (Type t : actualTypeArguments) {
                 sj.add(t.getTypeName());
             }
             sb.append(sj.toString());

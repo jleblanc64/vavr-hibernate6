@@ -13,12 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.jleblanc64.hibernate6;
+package io.github.jleblanc64.hibernate6.meta;
 
-import static io.github.jleblanc64.libcustom.functional.Functor.print;
+public interface WithClass<T> {
+    Class<T> monadClass();
 
-public class Hello {
-    public static void main(String[] args){
-        print("hello");
+    default boolean isSuperClassOf(Object o) {
+        if (o == null)
+            return false;
+
+        var clazz = o instanceof Class ? ((Class) o) : o.getClass();
+        return monadClass().isAssignableFrom(clazz);
     }
 }
