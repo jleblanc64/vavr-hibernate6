@@ -18,6 +18,8 @@ package io.github.jleblanc64.hibernate6.jackson.deser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import io.github.jleblanc64.hibernate6.hibernate.Utils;
+import io.github.jleblanc64.hibernate6.impl.MetaListImpl;
+import io.github.jleblanc64.hibernate6.impl.MetaOptionImpl;
 import io.github.jleblanc64.hibernate6.meta.MetaList;
 import io.github.jleblanc64.hibernate6.meta.MetaOption;
 import lombok.SneakyThrows;
@@ -26,8 +28,14 @@ import org.springframework.http.converter.HttpMessageConverter;
 import java.util.List;
 
 public class UpdateOM {
+    public static void update(ObjectMapper om, List<HttpMessageConverter<?>> converters) {
+        var metaOption = new MetaOptionImpl();
+        var metaList = new MetaListImpl();
+        updateCustom(om, converters, metaOption, metaList);
+    }
+
     @SneakyThrows
-    public static void update(ObjectMapper om, List<HttpMessageConverter<?>> converters, MetaOption metaOption, MetaList metaList) {
+    public static void updateCustom(ObjectMapper om, List<HttpMessageConverter<?>> converters, MetaOption metaOption, MetaList metaList) {
         om.registerModule(new OptionModule(metaOption));
 
         var simpleModule = new SimpleModule()

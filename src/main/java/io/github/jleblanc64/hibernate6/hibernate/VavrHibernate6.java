@@ -17,8 +17,13 @@ package io.github.jleblanc64.hibernate6.hibernate;
 
 import io.github.jleblanc64.hibernate6.hibernate.duplicate.FieldCustomType;
 import io.github.jleblanc64.hibernate6.hibernate.duplicate.TypeImpl;
+import io.github.jleblanc64.hibernate6.impl.MetaListImpl;
+import io.github.jleblanc64.hibernate6.impl.MetaOptionImpl;
+import io.github.jleblanc64.hibernate6.jackson.VavrJackson;
 import io.github.jleblanc64.hibernate6.meta.MetaList;
 import io.github.jleblanc64.hibernate6.meta.MetaOption;
+import io.github.jleblanc64.hibernate6.spring.OverrideContentType;
+import io.github.jleblanc64.hibernate6.spring.VavrSpring;
 import io.github.jleblanc64.libcustom.LibCustom;
 import lombok.SneakyThrows;
 import org.hibernate.annotations.common.reflection.XClass;
@@ -41,8 +46,29 @@ import static io.github.jleblanc64.hibernate6.hibernate.Utils.isOfType;
 import static org.mockito.Mockito.mock;
 
 public class VavrHibernate6 {
+    public static void override() {
+        var metaList = new MetaListImpl();
+        var metaOption = new MetaOptionImpl();
+
+        overrideCustom(metaList, metaOption);
+    }
+
+    public static void overrideCustom(MetaList metaList, MetaOption metaOption) {
+        overrideCustom(metaList);
+        VavrSpring.overrideCustom(metaList);
+        VavrJackson.overrideCustom(metaList);
+
+        overrideCustom(metaOption);
+        VavrSpring.overrideCustom(metaOption);
+        VavrJackson.overrideCustom(metaOption);
+
+        OverrideContentType.override();
+
+        LibCustom.load();
+    }
+
     @SneakyThrows
-    public static void override(MetaList metaList) {
+    private static void overrideCustom(MetaList metaList) {
 
         LibCustom.modifyReturn(JavaReflectionManager.class, "getXProperty", x -> {
             var returned = x.returned;
@@ -132,7 +158,7 @@ public class VavrHibernate6 {
     }
 
     @SneakyThrows
-    public static void override(MetaOption<?> metaOption) {
+    private static void overrideCustom(MetaOption<?> metaOption) {
         var setterFieldImplClass = Class.forName("org.hibernate.property.access.spi.SetterFieldImpl");
         var getterFieldImplClass = Class.forName("org.hibernate.property.access.spi.GetterFieldImpl");
 

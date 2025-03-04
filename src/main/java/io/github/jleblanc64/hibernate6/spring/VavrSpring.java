@@ -32,7 +32,7 @@ import java.util.Optional;
 
 public class VavrSpring {
     @SneakyThrows
-    public static void override(MetaList metaList) {
+    public static void overrideCustom(MetaList metaList) {
         LibCustom.override(GenericConversionService.class, "convert", args -> {
             if (args == null || args.length != 3)
                 return LibCustom.ORIGINAL;
@@ -53,7 +53,7 @@ public class VavrSpring {
     }
 
     @SneakyThrows
-    public static void override(MetaOption metaOption) {
+    public static void overrideCustom(MetaOption metaOption) {
         LibCustom.modifyReturn(MethodParameter.class, "getGenericParameterType", argsR -> {
             var returned = argsR.returned.toString();
             if (returned.startsWith(metaOption.monadClass().getName() + "<")) {

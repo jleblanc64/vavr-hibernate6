@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import static io.github.jleblanc64.libcustom.FieldMocked.*;
 
 public class VavrJackson {
-    public static void override(MetaList metaList) {
+    public static void overrideCustom(MetaList metaList) {
         LibCustom.modifyReturn(AbstractJackson2HttpMessageConverter.class, "readJavaType", argsR -> {
             var returned = argsR.returned;
             if (returned == null)
@@ -48,7 +48,7 @@ public class VavrJackson {
         });
     }
 
-    public static void override(MetaOption metaOption) {
+    public static void overrideCustom(MetaOption metaOption) {
         LibCustom.modifyReturn(AbstractJackson2HttpMessageConverter.class, "readJavaType", argsR -> {
             var returned = argsR.returned;
             if (returned == null)
