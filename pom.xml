@@ -74,12 +74,6 @@
             <groupId>io.github.jleblanc64</groupId>
             <artifactId>lib-custom</artifactId>
             <version>1.0.10</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hibernate</groupId>
-                    <artifactId>hibernate-core</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
