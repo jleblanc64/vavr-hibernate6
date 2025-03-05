@@ -22,6 +22,7 @@ import io.github.jleblanc64.hibernate6.impl.MetaListImpl;
 import io.github.jleblanc64.hibernate6.impl.MetaOptionImpl;
 import io.github.jleblanc64.hibernate6.meta.MetaList;
 import io.github.jleblanc64.hibernate6.meta.MetaOption;
+import io.github.jleblanc64.libcustom.LibCustom;
 import lombok.SneakyThrows;
 import org.springframework.http.converter.HttpMessageConverter;
 
@@ -46,6 +47,8 @@ public class UpdateOM {
         var msgConverterClass = Class.forName("org.springframework.http.converter.json.MappingJackson2HttpMessageConverter");
         io.vavr.collection.List.ofAll(converters).filter(c -> msgConverterClass.isAssignableFrom(c.getClass()))
                 .forEach(c -> setObjectMapper(c, om));
+
+        LibCustom.load();
     }
 
     @SneakyThrows
